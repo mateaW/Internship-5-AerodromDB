@@ -21,6 +21,12 @@ CREATE TABLE Airplanes (
 	AirportID INT REFERENCES Airports(AirportID)
 );
 
+ALTER TABLE Airplanes
+ADD COLUMN Name VARCHAR(50) NOT NULL;
+
+ALTER TABLE Airplanes
+ADD COLUMN Model VARCHAR(50) NOT NULL;
+
 CREATE TABLE Flights (
 	FlightID SERIAL PRIMARY KEY,
 	AirplaneID INT REFERENCES Airplanes(AirplaneID),
@@ -126,6 +132,9 @@ CREATE TRIGGER trigger_ck_loyalty_card
 BEFORE INSERT OR UPDATE ON Users
 FOR EACH ROW
 EXECUTE FUNCTION ck_loyalty_card();
+
+
+
 
 
 
