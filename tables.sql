@@ -94,8 +94,20 @@ ALTER TABLE Staff
 ALTER TABLE Reviews
     ADD CONSTRAINT CK_Rating CHECK (Rating >= 1 AND Rating <= 5);
 	
+-- function to check if FlightCapacity <= PassengerCapacity
+CREATE OR REPLACE FUNCTION 	ck_capacity(flight_capacity INT, airplane_id INT)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN flight_capacity <= 
+  (SELECT PassengerCapacity FROM Airplanes 
+   WHERE AirplaneID = airplane_id);
+END;
+$$ LANGUAGE plpgsql;
 
-	
+-- constraint using the function above
+ALTER TABLE Flights
+ADD CONSTRAINT CK_Capacity CHECK (ck_capacity(FlightCapacity, AirplaneID));
+
 	
 	
 	
