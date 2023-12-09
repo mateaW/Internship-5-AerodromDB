@@ -95,7 +95,7 @@ ALTER TABLE Reviews
     ADD CONSTRAINT CK_Rating CHECK (Rating >= 1 AND Rating <= 5);
 	
 -- function to check if FlightCapacity <= PassengerCapacity
-CREATE OR REPLACE FUNCTION 	ck_capacity(flight_capacity INT, airplane_id INT)
+CREATE OR REPLACE FUNCTION ck_capacity(flight_capacity INT, airplane_id INT)
 RETURNS BOOLEAN AS $$
 BEGIN
   RETURN flight_capacity <= 
@@ -107,6 +107,29 @@ $$ LANGUAGE plpgsql;
 -- constraint using the function above
 ALTER TABLE Flights
 ADD CONSTRAINT CK_Capacity CHECK (ck_capacity(FlightCapacity, AirplaneID));
+
+-- function to check if user can make a loyalty card
+CREATE OR REPLACE FUNCTION ck_loyalty_card()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.LoyaltyCardeExpiryDate IS NULL AND (
+    SELECT COUNT(*) FROM Tickets WHERE UserID = NEW.UserID) < 10 
+	THEN
+    RAISE EXCEPTION 'User must have at least 10 bought tickets before havin a Loyalty Card';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- trigger that calls the function before inserting or updating the Users table:
+CREATE TRIGGER trigger_ck_loyalty_card
+BEFORE INSERT OR UPDATE ON Users
+FOR EACH ROW
+EXECUTE FUNCTION ck_loyalty_card();
+
+
+
+
 
 	
 	
