@@ -69,3 +69,38 @@ CREATE TABLE Reviews (
 	CommentContent TEXT,
 	Rating INT NOT NULL
 );
+
+-- constraints 
+ALTER TABLE Airplanes
+    ADD CONSTRAINT CK_Status CHECK (
+        Status IN ('Active', 'For Sale', 'Under Repair', 'Disassembled')),
+    ADD CONSTRAINT CK_Location CHECK (
+        Location IN ('Air', 'Runway', 'Warehouse'));
+		
+ALTER TABLE Tickets
+    ADD CONSTRAINT CK_SeatClass CHECK (
+        SeatClass IN ('A', 'B'));
+	
+ALTER TABLE Staff
+	ADD CONSTRAINT CK_Gender CHECK (Gender IN ('Male', 'Female')),
+    ADD CONSTRAINT CK_StaffRole CHECK (StaffRole IN ('Pilot', 'Flight Attendant', 'Technical Staff')),
+    ADD CONSTRAINT CK_PilotAge CHECK (
+        CASE 
+            WHEN StaffRole = 'Pilot' THEN 
+			EXTRACT(YEAR FROM AGE(NOW(), Birth)) >= 20 AND EXTRACT(YEAR FROM AGE(NOW(), Birth)) <= 60
+        ELSE true
+        END);  
+	
+ALTER TABLE Reviews
+    ADD CONSTRAINT CK_Rating CHECK (Rating >= 1 AND Rating <= 5);
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
