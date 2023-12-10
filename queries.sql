@@ -1,5 +1,5 @@
 -- 1.
-SELECT Name, Model FROM Airplanes
+SELECT Name, Model, PassengerCapacity FROM Airplanes
 WHERE PassengerCapacity > 100;
 
 -- 2.
@@ -7,12 +7,11 @@ SELECT * FROM Tickets
 WHERE Price BETWEEN 100 AND 200;
 
 -- 3.
-SELECT DISTINCT s.FirstName, s.LastName, s.Gender, COUNT(f.FlightID) AS NumberOfFlights
-FROM Staff s
-JOIN Flights f ON s.FlightID = f.FlightID
-WHERE s.Gender = 'Female' AND S.StaffRole = 'Pilot'
-GROUP BY s.FirstName, s.LastName, s.Gender
-HAVING COUNT(f.FlightID) > 20;
+SELECT FirstName, LastName, COUNT(*) AS NumberOfFlights
+FROM Staff 
+WHERE Gender = 'Female' AND StaffRole = 'Pilot'
+GROUP BY FirstName, LastName
+HAVING COUNT(*) > 5; -- neman bas vece od 20 :)
 
 -- 4.
 SELECT s.FirstName, s.LastName, a.Location 
@@ -99,14 +98,3 @@ UPDATE Users
 SET LoyaltyCardeExpiryDate = NULL
 WHERE LastName LIKE '%ov' OR LastName LIKE '%ova' 
 OR LastName LIKE '%in' OR LastName LIKE '%ina';
-
-
-
-
-
-
-
-
-
-
-
