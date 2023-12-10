@@ -1,17 +1,13 @@
 -- tables
-CREATE TABLE Cities (
-	CityID SERIAL PRIMARY KEY,
-	CityName varchar(100) NOT NULL,
-	Coordinates POINT NOT NULL
-);
-
 CREATE TABLE Airports (
 	AirportID SERIAL PRIMARY KEY,
 	Name VARCHAR(100) NOT NULL,
-	CityID INT REFERENCES Cities(CityID),
 	MaxCapacityRunway INT NOT NULL,
 	MaxCapacityWarehouse INT NOT NULL
 );
+
+ALTER TABLE Airports 
+ADD COLUMN City VARCHAR(100) NOT NULL;
 
 CREATE TABLE Airplanes (
 	AirplaneID SERIAL PRIMARY KEY,
@@ -27,6 +23,9 @@ ADD COLUMN Name VARCHAR(50) NOT NULL;
 ALTER TABLE Airplanes
 ADD COLUMN Model VARCHAR(50) NOT NULL;
 
+ALTER TABLE Airplanes
+ADD COLUMN Company VARCHAR(50) NOT NULL;
+
 CREATE TABLE Flights (
 	FlightID SERIAL PRIMARY KEY,
 	AirplaneID INT REFERENCES Airplanes(AirplaneID),
@@ -36,6 +35,19 @@ CREATE TABLE Flights (
 	DepartureTime TIME,
 	ArrivalTime TIME
 );
+
+-- change into timestamp so we can see year and date also
+ALTER TABLE Flights DROP COLUMN DepartureTime;
+ALTER TABLE Flights DROP COLUMN ArrivalTime;
+
+ALTER TABLE Flights
+ADD COLUMN DepartureTime TIMESTAMP;
+ALTER TABLE Flights
+ADD COLUMN ArrivalTime TIMESTAMP;
+
+-- departure airport is airportID from airplaneID
+ALTER TABLE Flights
+DROP COLUMN DepartureAirportID;
 
 CREATE TABLE Users (
 	UserID SERIAL PRIMARY KEY,
