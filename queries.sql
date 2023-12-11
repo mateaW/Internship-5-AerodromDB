@@ -14,14 +14,14 @@ GROUP BY FirstName, LastName
 HAVING COUNT(*) > 5; -- neman bas vece od 20 :)
 
 -- 4.
-SELECT s.FirstName, s.LastName, a.Location 
+SELECT s.FirstName, s.LastName, s.StaffRole, a.Location 
 FROM Staff s
 JOIN Flights f ON s.FlightID = f.FlightID
 JOIN Airplanes a ON f.AirplaneID = a.AirplaneID
-WHERE s.StaffRole = 'Flight Attendant' AND a.Location = 'InAir';
+WHERE s.StaffRole = 'Flight Attendant' AND a.Location = 'Air';
 
 -- 5.
-SELECT COUNT(*) FROM Flights f
+SELECT COUNT(*) AS NumberOfFlightsST FROM Flights f
 JOIN Airports a ON f.DestinationAirportID = a.AirportID
 WHERE (a.City = 'Split' OR 
 f.DestinationAirportID IN (SELECT AirportID FROM Airports 
@@ -30,7 +30,8 @@ AND EXTRACT(YEAR FROM DepartureTime) = 2023;
 
 -- 6. 
 SELECT * FROM Flights
-WHERE DestinationAirportID = (SELECT AirportID FROM Airports WHERE City = 'Vienna')
+WHERE DestinationAirportID = (SELECT AirportID FROM Airports 
+WHERE City = 'Vienna')
 AND EXTRACT(YEAR FROM DepartureTime) = 2023
 AND EXTRACT(MONTH FROM DepartureTime) = 12;
 
@@ -48,7 +49,6 @@ SELECT AVG(r.Rating) AS AverageFlightRating FROM Reviews r
 JOIN Flights f ON r.FlightID = f.FlightID
 JOIN Airplanes a ON f.AirplaneID = a.AirplaneID
 WHERE a.Company = 'AirDUMP';
-
 
 -- 9.
 SELECT a.Name, COUNT(*) AS NumberOfAirbusPlanes FROM Airports a
